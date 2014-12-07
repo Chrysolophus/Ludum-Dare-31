@@ -8,7 +8,8 @@
 	var W = canvas.width;
 	var H = canvas.height;
 	var G = 20;
-	var G_FALLOFF = 10;
+	var G_FALLOFF = 5;
+	var MAX_SPEED = 400;
 	var mode;
 	
 	var xTouch = null;
@@ -63,6 +64,14 @@
 			this.vy += dy * force;
 		}
 		
+		// ensure that velocity is ceilinged at MAX_SPEED
+
+		var speed = Math.sqrt((this.vx * this.vx) + (this.vy * this.vy));
+		if (speed > MAX_SPEED) {
+			this.vx = this.vx * (MAX_SPEED / speed);
+                        this.vy = this.vy * (MAX_SPEED / speed);
+		}
+
 		// apply velocity
 		this.x += this.vx * timeScale;
 		this.y += this.vy * timeScale;
