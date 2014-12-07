@@ -38,17 +38,17 @@
 		// apply thrust
 		
 		// apply velocity
-		this.x = this.vx * timeScale;
-		this.y = this.vy * timeScale;
+		this.x += this.vx * timeScale;
+		this.y += this.vy * timeScale;
 		
 		// wrap to bounds
-		if(this.x > W) this.x -= W;
-		if(this.y > H) this.y -= H;
-		if(this.x < 0) this.x += W;
-		if(this.y < 0) this.y += H;
+		if(this.x > W) this.x = this.x % W;
+		if(this.y > H) this.y = this.y % H;
+		if(this.x < 0) this.x = (this.x % W) + W;
+		if(this.y < 0) this.y = (this.y % H) + H;
 
 		//this.debug();
-		//console.log(W, H);
+		//console.log(timeScale);
 	};
 	PhysicsObject.prototype.drawAt = function(x, y) {
 		cx.save();
@@ -123,7 +123,7 @@
 	
 	var clockrate = 1000/60;
 	window.setInterval(function() {
-		mode(clockrate);
+		mode(clockrate/1000);
 	}, clockrate);
 	
 })(document.getElementById("theCanvas"), {
