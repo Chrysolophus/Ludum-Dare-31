@@ -12,7 +12,8 @@
 	var mode;
 	
 	var xTouch = null;
-	var yTouch;
+	var yTouch = null;
+	var touchID = null;
 	
 	var objects = [];
 	var well;
@@ -122,7 +123,26 @@
 	window.addEventListener("mouseup", function(e) {
 		xTouch = null;
 		yTouch = null;
+		touchID = null;
 	});
+	canvas.addEventListener("touchstart", function(e) {
+		xTouch = e.changedTouches[0].pageX - canvas.pageX;
+		yTouch = e.changedTouches[0].pageY - canvas.pageY;
+		touchID = e.changedTouches[0].identifier;
+		e.preventDefault();
+		//console.log(xTouch, yTouch);
+	});
+	canvas.addEventListener("touchend", function(e) {
+		for(var i = 0; i < e.changedTouches.length; i++) {
+			if(touchID == e.changedTouches[i].identifier) {
+				xTouch = null;
+				yTouch = null;
+				touchID = null;
+			}
+		}
+		e.preventDefault();
+	});
+	
 	
 	//
 	// Main Loop
