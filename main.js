@@ -9,6 +9,9 @@
 	var H = canvas.height;
 	var mode;
 	
+	var xTouch = null;
+	var yTouch;
+	
 	var objects = [];
 	
 	function rand(max) {
@@ -89,8 +92,14 @@
 	//
 	
 	canvas.addEventListener("mousedown", function(e) {
+		xTouch = e.offsetX;
+		yTouch = e.offsetY;
+		e.preventDefault();
+		console.log(xTouch, yTouch);
 	});
-	canvas.addEventListener("mouseup", function(e) {
+	window.addEventListener("mouseup", function(e) {
+		xTouch = null;
+		yTouch = null;
 	});
 	
 	//
