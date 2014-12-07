@@ -13,6 +13,7 @@
 	var yTouch;
 	
 	var objects = [];
+	var well;
 	
 	function rand(max) {
 		return Math.random() * max;
@@ -40,8 +41,8 @@
 		
 		// apply thrust
 
-		this.vx += this.thrust * cos(this.angle) * timeScale;
-		this.vy += this.thrust * sin(this.angle) * timeScale;
+		this.vx += this.thrust * Math.cos(this.angle) * timeScale;
+		this.vy += this.thrust * Math.sin(this.angle) * timeScale;
 		
 		// apply velocity
 		this.x += this.vx * timeScale;
@@ -98,7 +99,7 @@
 		xTouch = e.offsetX;
 		yTouch = e.offsetY;
 		e.preventDefault();
-		console.log(xTouch, yTouch);
+		//console.log(xTouch, yTouch);
 	});
 	window.addEventListener("mouseup", function(e) {
 		xTouch = null;
@@ -120,6 +121,12 @@
 		cx.fillStyle = "#000000";
 		cx.fillRect(0,0, W,H);
 		
+		if(xTouch) {
+			well.x = xTouch;
+			well.y = yTouch;
+			well.draw();
+		}
+		
 		for(var i = 0; i < objects.length; i++) {
 			objects[i].draw();
 		}
@@ -133,6 +140,8 @@
 	spawnAsteroid(300, 200);
 	spawnAsteroid(400, 50);
 	
+	well = new PhysicsObject(resource.spiral);
+	
 	var clockrate = 1000/60;
 	window.setInterval(function() {
 		mode(clockrate/1000);
@@ -143,5 +152,6 @@ ship: document.getElementById("ship"),
 ship2: document.getElementById("ship2"),
 ship3: document.getElementById("ship3"),
 bullet: document.getElementById("bullet"),
-asteroid: document.getElementById("asteroid")
+asteroid: document.getElementById("asteroid"),
+spiral: document.getElementById("spiral")
 });
