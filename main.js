@@ -36,6 +36,9 @@
 		}
 		
 		// apply thrust
+
+		this.vx += this.thrust * cos(this.angle) * timeScale;
+		this.vy += this.thrust * sin(this.angle) * timeScale;
 		
 		// apply velocity
 		this.x += this.vx * timeScale;
