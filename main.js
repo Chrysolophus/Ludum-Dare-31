@@ -110,6 +110,16 @@
 		objects.push(asteroid);
 	};
 	
+	function spawnShip(x, y, sprite, ai) {
+		var ship = new PhysicsObject(sprite);
+		
+		ship.x = x;
+		ship.y = y;
+		ship.think = ai;
+		
+		objects.push(ship);
+	}
+	
 	//
 	// Input Listeners
 	//
@@ -171,12 +181,22 @@
 		
 	}
 
-	// Init
-	mode = gameLoop;
+	// Stages
+	function clearWorld() {
+	}
 	
-	spawnAsteroid(100, 100);
-	spawnAsteroid(300, 200);
-	spawnAsteroid(400, 50);
+	function level1() {
+		clearWorld();
+		
+		spawnAsteroid(100, 100);
+		spawnAsteroid(300, 200);
+		spawnAsteroid(400, 50);
+		
+		mode = gameLoop;
+	}
+
+	// Init
+	level1();
 	
 	well = new PhysicsObject(resource.spiral);
 	
