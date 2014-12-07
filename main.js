@@ -124,6 +124,9 @@
 		
 		ship.x = x;
 		ship.y = y;
+		ship.angle = rand(Math.PI * 2);
+		ship.vx = 0;
+		ship.vy = 0;
 		ship.think = ai;
 		
 		objects.push(ship);
@@ -200,6 +203,11 @@
 		spawnAsteroid(100, 100);
 		spawnAsteroid(300, 200);
 		spawnAsteroid(400, 50);
+
+		function dummy() {
+			//ship.angle += (0.25 * Math.PI);
+		};
+		spawnShip(200, 200, resource.ship, dummy);
 		
 		mode = gameLoop;
 	}
