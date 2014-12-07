@@ -7,6 +7,8 @@
 	var cx = canvas.getContext("2d");
 	var W = canvas.width;
 	var H = canvas.height;
+	var G = 20;
+	var G_FALLOFF = 10;
 	var mode;
 	
 	var xTouch = null;
@@ -43,6 +45,22 @@
 
 		this.vx += this.thrust * Math.cos(this.angle) * timeScale;
 		this.vy += this.thrust * Math.sin(this.angle) * timeScale;
+		
+		// apply gravity
+		if(xTouch) {
+			// calc. normalized gravity direction
+			var dx = xTouch - this.x;
+			var dy = yTouch - this.y;
+			var dist = Math.sqrt(dx*dx + dy*dy);
+			dx /= dist;
+			dy /= dist;
+			
+			// apply
+			var force = G * G_FALLOFF/dist;
+			
+			this.vx += dx * force;
+			this.vy += dy * force;
+		}
 		
 		// apply velocity
 		this.x += this.vx * timeScale;
