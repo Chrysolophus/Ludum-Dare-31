@@ -48,8 +48,8 @@
 		
 		// apply thrust
 
-		this.vx += this.thrust * Math.cos(this.angle) * timeScale;
-		this.vy += this.thrust * Math.sin(this.angle) * timeScale;
+		this.vx += this.thrust * Math.sin(this.angle) * timeScale;
+		this.vy += this.thrust * Math.cos(this.angle) * timeScale;
 		
 		// apply gravity
 		if(xTouch) {
@@ -293,7 +293,7 @@
 					var dist = Math.sqrt(dx*dx + dy*dy);
 					if (dist < nearestDist) {
 						nearestDist = dist;
-						nearestRock = objects[0];
+						nearestRock = objects[i];
 					}
 				}
 			}
@@ -317,7 +317,7 @@
 
 			// Back away from the closest asteroid
 
-			//this.thrust = -50;
+			this.thrust = -50;
 
 			// Fire a bullet
 		};
