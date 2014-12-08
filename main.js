@@ -1,8 +1,11 @@
-(function(canvas, resource) {
+(function(tags, resource) {
 	
 	//
 	// Globals
 	//
+	
+	var canvas = tags.canvas;
+	var wrapper = tags.wrapper;
 	
 	var cx = canvas.getContext("2d");
 	var W = canvas.width;
@@ -194,9 +197,11 @@
 	// Input Listeners
 	//
 	
-	canvas.addEventListener("mousedown", function(e) {
-		xTouch = e.offsetX;
-		yTouch = e.offsetY;
+	var bounds = wrapper.getBoundingClientRect();
+	wrapper.addEventListener("mousedown", function(e) {
+		//console.log(e.pageX, wrapper.pageX)
+		xTouch = e.clientX - bounds.left;
+		yTouch = e.clientY - bounds.top;
 		e.preventDefault();
 		//console.log(xTouch, yTouch);
 	});
@@ -205,14 +210,14 @@
 		yTouch = null;
 		touchID = null;
 	});
-	canvas.addEventListener("touchstart", function(e) {
-		xTouch = e.changedTouches[0].pageX - canvas.pageX;
-		yTouch = e.changedTouches[0].pageY - canvas.pageY;
+	wrapper.addEventListener("touchstart", function(e) {
+		xTouch = e.changedTouches[0].pageX - wrapper.pageX;
+		yTouch = e.changedTouches[0].pageY - wrapper.pageY;
 		touchID = e.changedTouches[0].identifier;
 		e.preventDefault();
 		//console.log(xTouch, yTouch);
 	});
-	canvas.addEventListener("touchend", function(e) {
+	window.addEventListener("touchend", function(e) {
 		for(var i = 0; i < e.changedTouches.length; i++) {
 			if(touchID == e.changedTouches[i].identifier) {
 				xTouch = null;
@@ -284,7 +289,11 @@
 		mode(clockrate/1000);
 	}, clockrate);
 	
-})(document.getElementById("theCanvas"), {
+})({
+canvas: document.getElementById("theCanvas"),
+wrapper: document.getElementById("gameWrapper"),
+text: document.getElementById("gameText")
+}, {
 ship: document.getElementById("ship"),
 ship2: document.getElementById("ship2"),
 ship3: document.getElementById("ship3"),

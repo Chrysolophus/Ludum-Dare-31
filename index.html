@@ -5,13 +5,47 @@
 		body {
 		
 		}
+		img {
+			display: none;
+		}
+		#gameWrapper {
+			position: absolute;
+			width: 640px;
+			height: 360px;
+		}
+		#overlay {
+			position: absolute;
+			bottom: 180px;
+			left: 0;
+			width: 640px;
+			
+			display: none;
+		}
+		#gameText {
+			text-align: justify;
+			padding: 0.5em 1em;
+			
+			color: #eeeeee;
+			background: rgba(80,80,80,0.6);
+			font-family: sans-serif;
+			font-size: 18px;
+		}
 		#theCanvas {
-		
+			position: absolute;
+			top: 0;
+			left: 0;
 		}
 	</style>
 </head>
 <body>
-	<canvas id="theCanvas" width="640" height="360"></canvas>
+	<div id="gameWrapper">
+		<canvas id="theCanvas" width="640" height="360"></canvas>
+		<div id="overlay">
+			<p id="gameText">
+				nm, qwertyui opasdfghj klzxcvbnm, qwertyui opasdfghj klzxcvbnm, qwertyui opasdfghj klzxcvbnm, sdfghj klzxcvbnm, qwertyui opas wertyui opasdfghj klzxcvbnm, qwertyui opasdfghj klzxcvbnm, qwertyui opasdfghj klzxcvbnm, qwertyui opasdfghj klzxcvbnm, sdfghj klzxcvbnm, qwertyui opasdfghj klzxcvbnm, qwertyui opasdfg
+			</p>
+		</div>
+	</div>
 	<img id="asteroid" src="img/asteroid.png" />
 	<img id="spiral" src="img/spiral.png" />
     <img id="bullet" src="img/bullet.png" />
