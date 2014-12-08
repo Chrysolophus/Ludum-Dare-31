@@ -50,10 +50,11 @@
 		}
 	
 		// apply thrust
-
+		
 		this.vx += this.thrust * Math.sin(this.angle) * timeScale;
 		this.vy += this.thrust * Math.cos(this.angle) * timeScale;
 		
+
 		// apply gravity
 		if(xTouch) {
 			// calc. normalized gravity direction
@@ -64,7 +65,7 @@
 			dy /= dist;
 			
 			// apply
-			var force = G * G_FALLOFF/dist;
+			var force = this.gScale * G * G_FALLOFF/dist;
 			
 			this.vx += dx * force;
 			this.vy += dy * force;
@@ -127,7 +128,8 @@
 		asteroid.angle = rand(Math.PI * 2);
 		asteroid.vx = Math.cos(asteroid.angle) * 100;
 		asteroid.vy = Math.sin(asteroid.angle) * 100;
-		
+		asteroid.gScale = 1;	
+	
 		asteroid.isAsteroid = true;
 		
 		objects.push(asteroid);
@@ -142,6 +144,7 @@
 		ship.vx = 0;
 		ship.vy = 0;
 		ship.think = ai;
+		ship.gScale = 0.5;
 	
 		ship.cooldown = 0;
 	
@@ -165,6 +168,7 @@
 		bullet.vx = 50 * Math.sin(angle);
 		bullet.vy = 50 * Math.cos(angle);
 		bullet.think = bulletThink;
+		bullet.gScale = 0;
 
 		bullet.isBullet = true;
 
@@ -181,6 +185,12 @@
 		if(a.isShip) {
 			if(b.isAsteroid) {
 				a.dead = true;
+			}
+		}
+		if (a.isBullet) {
+			if(b.isAsteroid) {
+				a.dead = true;
+				b.dead = true;
 			}
 		}
 	}
