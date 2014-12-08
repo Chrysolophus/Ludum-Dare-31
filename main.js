@@ -11,9 +11,9 @@
 	var cx = canvas.getContext("2d");
 	var W = canvas.width;
 	var H = canvas.height;
-	var G = 20;
-	var G_FALLOFF = 5;
-	var MAX_SPEED = 40;
+	var G = 30;
+	var G_FALLOFF = 7;
+	var MAX_SPEED = 75;
 	var mode, messageAction;
 	
 	var tau = Math.PI * 2;
@@ -122,7 +122,7 @@
 	};
 	
 	function spawnAsteroid(x, y) {
-		var asteroid = new PhysicsObject(resource.asteroid, 100);
+		var asteroid = new PhysicsObject(resource.asteroid, 50);
 		
 		asteroid.x = x;
 		asteroid.y = y;
@@ -174,7 +174,7 @@
 
 		bullet.isBullet = true;
 
-		bullet.lifespan = 2.5;
+		bullet.lifespan = 3.5;
 
 		objects.push(bullet);
 	}
@@ -287,11 +287,12 @@
 		}
 	}
 	
-	var ready = false;
+	var clickReady = false;
+	var timeReady = false;
 	function messageIdle(rate) {
-		if(xTouch) {
-			ready = true;
-		} else if(ready) {
+		if(xTouch && timeReady) {
+			clickReady = true;
+		} else if(clickReady) {
 			text.style.display = "none";
 			messageAction();
 		}
@@ -303,12 +304,17 @@
 		text.style.display = "block";
 		text.innerHTML = msg;
 		
-		ready = false;
+		clickReady = false;
+		timeReady = false;
 		mode = messageIdle;
 		
 		messageAction = nextFunc || function() {
 			mode = gameLoop;
 		};
+		
+		setTimeout(function() {
+			timeReady = true;
+		}, 1000);
 	}
 	
 	function gameLoop(rate) {
@@ -345,7 +351,7 @@
 		
 		function shipAI(timeScale) {
 			
-			var TURN_SPEED = Math.PI / 2;
+			var TURN_SPEED = Math.PI * 2;
 			
 			// Find the nearest object
 			
@@ -399,7 +405,7 @@
 			this.cooldown -= timeScale;
 
 			if (this.cooldown <= 0) {
-				this.cooldown = 1;
+				this.cooldown = 0.7;
 				spawnBullet(this.x, this.y, resource.bullet, this.angle);
 			}
 		};
