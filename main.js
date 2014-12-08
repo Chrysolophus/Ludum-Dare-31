@@ -42,6 +42,7 @@
 		this.thrust = 0;
 		this.scale = scale;	
 		this.img = sprite;
+		this.gScale = 1;
 	};
 	PhysicsObject.prototype.tick = function(timeScale) {
 		// AI
@@ -127,8 +128,7 @@
 		asteroid.y = y;
 		asteroid.angle = rand(Math.PI * 2);
 		asteroid.vx = Math.cos(asteroid.angle) * 100;
-		asteroid.vy = Math.sin(asteroid.angle) * 100;
-		asteroid.gScale = 1;	
+		asteroid.vy = Math.sin(asteroid.angle) * 100;	
 	
 		asteroid.isAsteroid = true;
 		
