@@ -16,7 +16,8 @@
 	var yTouch = null;
 	var touchID = null;
 	
-	var objects = [];
+	var allies = [];
+	var foes = [];
 	var well;
 	
 	function rand(max) {
@@ -40,7 +41,7 @@
 	PhysicsObject.prototype.tick = function(timeScale) {
 		// AI
 		if(this.think) {
-			this.think();
+			this.think(timeScale);
 		}
 		
 		// apply thrust
@@ -69,7 +70,7 @@
 		var speed = Math.sqrt((this.vx * this.vx) + (this.vy * this.vy));
 		if (speed > MAX_SPEED) {
 			this.vx = this.vx * (MAX_SPEED / speed);
-                        this.vy = this.vy * (MAX_SPEED / speed);
+			this.vy = this.vy * (MAX_SPEED / speed);
 		}
 
 		// apply velocity
@@ -81,6 +82,10 @@
 		if(this.y > H) this.y = this.y % H;
 		if(this.x < 0) this.x = (this.x % W) + W;
 		if(this.y < 0) this.y = (this.y % H) + H;
+
+		var tau = 2 * Math.PI;
+		if(this.angle < 0) this.angle = (this.angle % tau) + tau;
+		if(this.angle > tau) this.angle = this.angle % tau;
 
 		//this.debug();
 		//console.log(timeScale);
@@ -116,7 +121,7 @@
 		asteroid.vx = Math.cos(asteroid.angle) * 100;
 		asteroid.vy = Math.sin(asteroid.angle) * 100;
 		
-		objects.push(asteroid);
+		allies.push(asteroid);
 	};
 	
 	function spawnShip(x, y, sprite, ai) {
@@ -129,7 +134,7 @@
 		ship.vy = 0;
 		ship.think = ai;
 		
-		objects.push(ship);
+		foes.push(ship);
 	}
 	
 	//
@@ -173,8 +178,11 @@
 	function gameLoop(rate) {
 		
 		// physics
-		for(var i = 0; i < objects.length; i++) {
-			objects[i].tick(rate);
+		for(var i = 0; i < allies.length; i++) {
+			allies[i].tick(rate);
+		}
+		for(var i = 0; i < foes.length; i++) {
+			foes[i].tick(rate);
 		}
 		
 		// render
@@ -187,8 +195,11 @@
 			well.draw();
 		}
 		
-		for(var i = 0; i < objects.length; i++) {
-			objects[i].draw();
+		for(var i = 0; i < allies.length; i++) {
+			allies[i].draw();
+		}
+		for(var i = 0; i < foes.length; i++) {
+			foes[i].draw();
 		}
 		
 	}
@@ -204,8 +215,9 @@
 		spawnAsteroid(300, 200);
 		spawnAsteroid(400, 50);
 
-		function dummy() {
-			//ship.angle += (0.25 * Math.PI);
+		function dummy(timeScale) {
+			this.angle += Math.PI / 2 * timeScale;
+			this.thrust = 50;
 		};
 		spawnShip(200, 200, resource.ship, dummy);
 		
