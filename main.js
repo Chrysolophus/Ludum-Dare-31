@@ -15,6 +15,8 @@
 	var MAX_SPEED = 40;
 	var mode;
 	
+	var tau = Math.PI * 2;
+	
 	var xTouch = null;
 	var yTouch = null;
 	var touchID = null;
@@ -85,7 +87,6 @@
 		if(this.x < 0) this.x = (this.x % W) + W;
 		if(this.y < 0) this.y = (this.y % H) + H;
 
-		var tau = 2 * Math.PI;
 		if(this.angle < 0) this.angle = (this.angle % tau) + tau;
 		if(this.angle > tau) this.angle = this.angle % tau;
 
@@ -309,7 +310,10 @@
 
 			var angleDiff = targetAngle - this.angle;
 
-			if (angleDiff > 0) {
+			if(angleDiff > Math.PI) angleDiff -= tau;
+			if(angleDiff < -Math.PI) angleDiff += tau;
+
+			if(angleDiff > 0) {
 				this.angle += TURN_SPEED * timeScale;
 			} else {
 				this.angle -= TURN_SPEED * timeScale;
