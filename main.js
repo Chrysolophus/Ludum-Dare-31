@@ -89,7 +89,7 @@
 		cx.save();
 			cx.translate(x, y);
 			cx.rotate(this.angle);
-			cx.drawImage(this.img, -50,-50,100 * this.scale,100 * this.scale);
+			cx.drawImage(this.img, -50 * this.scale,-50 * this.scale,100 * this.scale,100 * this.scale);
 		cx.restore();
 	};
 	PhysicsObject.prototype.draw = function() {
