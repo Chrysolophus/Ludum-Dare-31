@@ -49,14 +49,6 @@
 			this.think(timeScale);
 		}
 	
-		if (this.isBullet) {
-                                if (this.lifespan == 0) {
-                                        this.die();
-                                } else {
-                                        this.lifespan -= 1;
-                                }
-                        }
-	
 		// apply thrust
 
 		this.vx += this.thrust * Math.sin(this.angle) * timeScale;
@@ -151,11 +143,18 @@
 		ship.vy = 0;
 		ship.think = ai;
 	
-		ship.shootCounter = 0;
+		ship.cooldown = 0;
 	
 		ship.isShip = true;
 		
 		objects.push(ship);
+	}
+
+	function bulletThink(rate) {
+		this.lifespan -= rate;
+		if(this.lifespan <= 0) {
+			this.dead = true;
+		}
 	}
 
 	function spawnBullet(x, y, sprite, angle) {
@@ -165,10 +164,11 @@
 		bullet.angle = angle;
 		bullet.vx = 50 * Math.sin(angle);
 		bullet.vy = 50 * Math.cos(angle);
+		bullet.think = bulletThink;
 
 		bullet.isBullet = true;
 
-		bullet.lifespan = 3;
+		bullet.lifespan = 2.5;
 
 		objects.push(bullet);
 	}
@@ -181,11 +181,8 @@
 		if(a.isShip) {
 			if(b.isAsteroid) {
 				a.dead = true;
-				a.die();
-				return true;
 			}
 		}
-		return false;
 	}
 	
 	function remove(i) {
@@ -209,13 +206,16 @@
 					var removeFirst = handleCollide(objects[i], objects[j]);
 					var removeSecond = handleCollide(objects[j], objects[i]);
 					
-					if(removeFirst) {
-						remove(i--);
-					}
-					if(removeSecond) {
-						remove(j--);
-					}
 				}
+			}
+		}
+	}
+	
+	function reap() {
+		for(var i = 0; i < objects.length; i++) {
+			if(objects[i].dead) {
+				objects[i].die();
+				remove(i--);
 			}
 		}
 	}
@@ -305,6 +305,8 @@
 		
 		checkHits();
 		
+		reap();
+		
 		render();
 	}
 
@@ -370,11 +372,11 @@
 			this.thrust = -50;
 
 			// Fire a bullet
-			this.shootCounter += 1;
+			this.cooldown -= timeScale;
 
-			console.log(this.shootCounter);
-			if ((this.shootCounter % 20) == 0) {
-			spawnBullet (this.x, this.y, resource.bullet, this.angle);
+			if (this.cooldown <= 0) {
+				this.cooldown = 1;
+				spawnBullet(this.x, this.y, resource.bullet, this.angle);
 			}
 		};
 		spawnShip(200, 200, resource.ship, shipAI);
