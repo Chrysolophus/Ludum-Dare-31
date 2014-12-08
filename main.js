@@ -27,14 +27,14 @@
 	// Objects
 	//
 	
-	function PhysicsObject(sprite) {
+	function PhysicsObject(sprite, scale) {
 		this.x = 0;
 		this.y = 0;
 		this.vx = 0;
 		this.vy = 0;
 		this.angle = 0;
 		this.thrust = 0;
-		
+		this.scale = scale;	
 		this.img = sprite;
 	};
 	PhysicsObject.prototype.tick = function(timeScale) {
@@ -89,7 +89,7 @@
 		cx.save();
 			cx.translate(x, y);
 			cx.rotate(this.angle);
-			cx.drawImage(this.img, -50,-50,100,100);
+			cx.drawImage(this.img, -50,-50,100 * this.scale,100 * this.scale);
 		cx.restore();
 	};
 	PhysicsObject.prototype.draw = function() {
@@ -108,7 +108,7 @@
 	};
 	
 	function spawnAsteroid(x, y) {
-		var asteroid = new PhysicsObject(resource.asteroid);
+		var asteroid = new PhysicsObject(resource.asteroid, 1);
 		
 		asteroid.x = x;
 		asteroid.y = y;
@@ -120,7 +120,7 @@
 	};
 	
 	function spawnShip(x, y, sprite, ai) {
-		var ship = new PhysicsObject(sprite);
+		var ship = new PhysicsObject(sprite, 0.5);
 		
 		ship.x = x;
 		ship.y = y;
@@ -215,7 +215,7 @@
 	// Init
 	level1();
 	
-	well = new PhysicsObject(resource.spiral);
+	well = new PhysicsObject(resource.spiral, 0.25);
 	
 	var clockrate = 1000/60;
 	window.setInterval(function() {
