@@ -12,7 +12,7 @@
 	var H = canvas.height;
 	var G = 20;
 	var G_FALLOFF = 5;
-	var MAX_SPEED = 400;
+	var MAX_SPEED = 40;
 	var mode;
 	
 	var xTouch = null;
@@ -145,6 +145,9 @@
 		
 		objects.push(ship);
 	}
+
+	function spawnBullet(x, y, angle) {
+	}
 	
 	//
 	// Collision Logic
@@ -274,7 +277,55 @@
 			this.angle += Math.PI / 2 * timeScale;
 			this.thrust = 50;
 		};
-		spawnShip(200, 200, resource.ship, dummy);
+
+		
+		function shipAI(timeScale) {
+			
+			// Find the nearest object
+			
+			var nearestRock;
+			var nearestDist = 1000000;
+
+			for(var i = 0; i < objects.length; i++) {
+                        if (objects[i].isAsteroid) {
+				var dist = 0;
+				dist += (objects[0].x - this.x) * (objects[0].x - this.x);
+				dist += (objects[0].y - this.y) * (objects[0].y - this.y);
+				dist = Math.sqrt(dist);
+				if (dist < nearestDist) {
+					nearestDist = dist;
+					nearestRock = objects[0];
+					}
+				}
+                	}
+
+			// Turn towards it
+
+			var turnAngle = Math.PI / 2 * timeScale;
+			
+			var del_x = nearestRock.x - this.x;
+			var del_y = nearestRock.y - this.y;
+
+			var targetAngle = Math.atan2(del_y, del_x);
+
+			console.log("***");
+			console.log(turnAngle);
+			console.log(this.angle);
+			console.log(targetAngle);
+
+			if ((targetAngle - this.angle) > 0) {
+				this.angle = targetAngle; // += Math.min((targetAngle - this.angle), turnAngle);
+			} else {
+				this.angle = targetAngle; //-= Math.max((targetAngle - this.angle), (turnAngle * -1));
+			}
+
+			// Back away from the closest asteroid
+
+			//this.thrust = -50;
+
+			// Fire a bullet
+		};
+		spawnShip(200, 200, resource.ship, shipAI);
 		
 		mode = gameLoop;
 	}
