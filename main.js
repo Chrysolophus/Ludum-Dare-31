@@ -6,6 +6,7 @@
 	
 	var canvas = tags.canvas;
 	var wrapper = tags.wrapper;
+	var text = tags.text;
 	
 	var cx = canvas.getContext("2d");
 	var W = canvas.width;
@@ -13,7 +14,7 @@
 	var G = 20;
 	var G_FALLOFF = 5;
 	var MAX_SPEED = 40;
-	var mode;
+	var mode, messageAction;
 	
 	var tau = Math.PI * 2;
 	
@@ -237,16 +238,7 @@
 	// Main Loop
 	//
 	
-	function gameLoop(rate) {
-		
-		// physics
-		for(var i = 0; i < objects.length; i++) {
-			objects[i].tick(rate);
-		}
-		
-		checkHits();
-		
-		// render
+	function render() {
 		cx.fillStyle = "#000000";
 		cx.fillRect(0,0, W,H);
 		
@@ -259,7 +251,39 @@
 		for(var i = 0; i < objects.length; i++) {
 			objects[i].draw();
 		}
+	}
+	
+	var ready = false;
+	function messageIdle(rate) {
+		if(xTouch) {
+			ready = true;
+		} else if(ready) {
+			text.style.display = "none";
+			messageAction();
+		}
 		
+		render();
+	}
+	
+	function showMessage(msg) {
+		text.style.display = "block";
+		text.innerHTML = msg;
+		mode = messageIdle;
+		messageAction = function() {
+			mode = gameLoop;
+		};
+	}
+	
+	function gameLoop(rate) {
+		
+		// physics
+		for(var i = 0; i < objects.length; i++) {
+			objects[i].tick(rate);
+		}
+		
+		checkHits();
+		
+		render();
 	}
 
 	// Stages
@@ -327,7 +351,11 @@
 		};
 		spawnShip(200, 200, resource.ship, shipAI);
 		
-		mode = gameLoop;
+		showMessage(
+"<p>You are an intrepid spacer of the Erehwon Asteroid Fields. Life is pretty good between hollowing out asteroids for their rich ore-y innards and the freeze-dried meals.\
+<p>Oh who are we kidding? Life sucks. It’s claustrophobic, the food bites, and you need to put up panels over the windows just to sleep properly at what passes for “night”. And it’s just gotten significantly worse now that the S.S. Triangle has shown up to launch a raid.\
+<p>Being types who stand to lose a lot here, it’s time to fight back with what you can… Which would be with some good-old fashioned space rocks and some gravity wells to launch them with.\
+<p>Objective: Destroy the S.S. Triangle with your arsenal.");
 	}
 
 	// Init

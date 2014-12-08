@@ -15,20 +15,28 @@
 		}
 		#overlay {
 			position: absolute;
-			bottom: 180px;
-			left: 0;
-			width: 640px;
 			
-			display: none;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			right: 0;
 		}
 		#gameText {
+			display: none;
+			
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0px;
+			
 			text-align: justify;
-			padding: 0.5em 1em;
+			padding: 0em 1em;
 			
 			color: #eeeeee;
 			background: rgba(80,80,80,0.6);
 			font-family: sans-serif;
-			font-size: 18px;
+			font-size: 16px;
+			font-weight: bold;
 		}
 		#theCanvas {
 			position: absolute;
@@ -41,9 +49,7 @@
 	<div id="gameWrapper">
 		<canvas id="theCanvas" width="640" height="360"></canvas>
 		<div id="overlay">
-			<p id="gameText">
-				nm, qwertyui opasdfghj klzxcvbnm, qwertyui opasdfghj klzxcvbnm, qwertyui opasdfghj klzxcvbnm, sdfghj klzxcvbnm, qwertyui opas wertyui opasdfghj klzxcvbnm, qwertyui opasdfghj klzxcvbnm, qwertyui opasdfghj klzxcvbnm, qwertyui opasdfghj klzxcvbnm, sdfghj klzxcvbnm, qwertyui opasdfghj klzxcvbnm, qwertyui opasdfg
-			</p>
+			<div id="gameText"></div>
 		</div>
 	</div>
 	<img id="asteroid" src="img/asteroid.png" />
