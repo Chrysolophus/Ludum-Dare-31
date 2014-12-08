@@ -48,7 +48,15 @@
 		if(this.think) {
 			this.think(timeScale);
 		}
-		
+	
+		if (this.isBullet) {
+                                if (this.lifespan == 0) {
+                                        this.die();
+                                } else {
+                                        this.lifespan -= 1;
+                                }
+                        }
+	
 		// apply thrust
 
 		this.vx += this.thrust * Math.sin(this.angle) * timeScale;
@@ -142,13 +150,27 @@
 		ship.vx = 0;
 		ship.vy = 0;
 		ship.think = ai;
-		
+	
+		ship.shootCounter = 0;
+	
 		ship.isShip = true;
 		
 		objects.push(ship);
 	}
 
-	function spawnBullet(x, y, angle) {
+	function spawnBullet(x, y, sprite, angle) {
+		var bullet = new PhysicsObject(sprite, 50);
+		bullet.x = x;
+		bullet.y = y;
+		bullet.angle = angle;
+		bullet.vx = 50 * Math.sin(angle);
+		bullet.vy = 50 * Math.cos(angle);
+
+		bullet.isBullet = true;
+
+		bullet.lifespan = 3;
+
+		objects.push(bullet);
 	}
 	
 	//
@@ -348,6 +370,12 @@
 			this.thrust = -50;
 
 			// Fire a bullet
+			this.shootCounter += 1;
+
+			console.log(this.shootCounter);
+			if ((this.shootCounter % 20) == 0) {
+			spawnBullet (this.x, this.y, resource.bullet, this.angle);
+			}
 		};
 		spawnShip(200, 200, resource.ship, shipAI);
 		
