@@ -12,7 +12,7 @@
 	var W = canvas.width;
 	var H = canvas.height;
 	var G = 30;
-	var G_FALLOFF = 7;
+	var G_FALLOFF = 3;
 	var MAX_SPEED = 75;
 	var mode, messageAction;
 	
@@ -167,8 +167,8 @@
 		bullet.x = x;
 		bullet.y = y;
 		bullet.angle = angle;
-		bullet.vx = 50 * Math.sin(angle);
-		bullet.vy = 50 * Math.cos(angle);
+		bullet.vx = 75 * Math.sin(angle);
+		bullet.vy = 75 * Math.cos(angle);
 		bullet.think = bulletThink;
 		bullet.gScale = 0;
 
