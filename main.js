@@ -281,6 +281,8 @@
 		
 		function shipAI(timeScale) {
 			
+			var TURN_SPEED = Math.PI / 2;
+			
 			// Find the nearest object
 			
 			var nearestRock;
@@ -300,19 +302,17 @@
 
 			// Turn towards it
 
-			var turnAngle = Math.PI / 2 * timeScale;
-			
 			var del_x = nearestRock.x - this.x;
 			var del_y = nearestRock.y - this.y;
 
 			var targetAngle = Math.atan2(del_x, -del_y);
 
-			//console.log(turnAngle, this.angle, targetAngle);
+			var angleDiff = targetAngle - this.angle;
 
-			if ((targetAngle - this.angle) > 0) {
-				this.angle = targetAngle; // += Math.min((targetAngle - this.angle), turnAngle);
+			if (angleDiff > 0) {
+				this.angle += TURN_SPEED * timeScale;
 			} else {
-				this.angle = targetAngle; //-= Math.max((targetAngle - this.angle), (turnAngle * -1));
+				this.angle -= TURN_SPEED * timeScale;
 			}
 
 			// Back away from the closest asteroid
