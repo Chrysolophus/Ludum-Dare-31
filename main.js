@@ -16,8 +16,7 @@
 	var yTouch = null;
 	var touchID = null;
 	
-	var allies = [];
-	var foes = [];
+	var objects = [];
 	var well;
 	
 	function rand(max) {
@@ -94,7 +93,7 @@
 		cx.save();
 			cx.translate(x, y);
 			cx.rotate(this.angle);
-			cx.drawImage(this.img, -50 * this.scale,-50 * this.scale,100 * this.scale,100 * this.scale);
+			cx.drawImage(this.img, -this.scale/2, -this.scale/2, this.scale, this.scale);
 		cx.restore();
 	};
 	PhysicsObject.prototype.draw = function() {
@@ -108,12 +107,15 @@
 		this.drawAt(this.x + W * xSign, this.y + H * ySign);
 		
 	};
+	PhysicsObject.prototype.die = function() {
+		// hook
+	};
 	PhysicsObject.prototype.debug = function() {
 		console.log(this.x, this.y, this.vx);
 	};
 	
 	function spawnAsteroid(x, y) {
-		var asteroid = new PhysicsObject(resource.asteroid, 1);
+		var asteroid = new PhysicsObject(resource.asteroid, 100);
 		
 		asteroid.x = x;
 		asteroid.y = y;
@@ -121,11 +123,13 @@
 		asteroid.vx = Math.cos(asteroid.angle) * 100;
 		asteroid.vy = Math.sin(asteroid.angle) * 100;
 		
-		allies.push(asteroid);
+		asteroid.isAsteroid = true;
+		
+		objects.push(asteroid);
 	};
 	
 	function spawnShip(x, y, sprite, ai) {
-		var ship = new PhysicsObject(sprite, 0.5);
+		var ship = new PhysicsObject(sprite, 50);
 		
 		ship.x = x;
 		ship.y = y;
@@ -134,7 +138,56 @@
 		ship.vy = 0;
 		ship.think = ai;
 		
-		foes.push(ship);
+		ship.isShip = true;
+		
+		objects.push(ship);
+	}
+	
+	//
+	// Collision Logic
+	//
+	
+	function handleCollide(a, b) {
+		if(a.isShip) {
+			if(b.isAsteroid) {
+				a.dead = true;
+				a.die();
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	function remove(i) {
+		objects[i] = objects[objects.length - 1];
+		objects.length--;
+	}
+	
+	function checkHits() {
+		for(var i = 0; i < objects.length; i++) {
+			for(var j = 0; j < objects.length; j++) {
+				if(i == j) continue;
+				
+				var dx = objects[i].x - objects[j].x;
+				var dy = objects[i].y - objects[j].y;
+				
+				var dist = Math.sqrt(dx*dx + dy*dy);
+				var sizeSum = objects[i].scale + objects[j].scale;
+				sizeSum /= 3; // 2 is more "correct", but 3 looks more intuitive.
+				
+				if(dist < sizeSum) {
+					var removeFirst = handleCollide(objects[i], objects[j]);
+					var removeSecond = handleCollide(objects[j], objects[i]);
+					
+					if(removeFirst) {
+						remove(i--);
+					}
+					if(removeSecond) {
+						remove(j--);
+					}
+				}
+			}
+		}
 	}
 	
 	//
@@ -178,12 +231,11 @@
 	function gameLoop(rate) {
 		
 		// physics
-		for(var i = 0; i < allies.length; i++) {
-			allies[i].tick(rate);
+		for(var i = 0; i < objects.length; i++) {
+			objects[i].tick(rate);
 		}
-		for(var i = 0; i < foes.length; i++) {
-			foes[i].tick(rate);
-		}
+		
+		checkHits();
 		
 		// render
 		cx.fillStyle = "#000000";
@@ -195,17 +247,15 @@
 			well.draw();
 		}
 		
-		for(var i = 0; i < allies.length; i++) {
-			allies[i].draw();
-		}
-		for(var i = 0; i < foes.length; i++) {
-			foes[i].draw();
+		for(var i = 0; i < objects.length; i++) {
+			objects[i].draw();
 		}
 		
 	}
 
 	// Stages
 	function clearWorld() {
+		objects.length = 0;
 	}
 	
 	function level1() {
@@ -227,7 +277,7 @@
 	// Init
 	level1();
 	
-	well = new PhysicsObject(resource.spiral, 0.25);
+	well = new PhysicsObject(resource.spiral, 25);
 	
 	var clockrate = 1000/60;
 	window.setInterval(function() {
