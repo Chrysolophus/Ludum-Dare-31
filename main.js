@@ -287,17 +287,16 @@
 			var nearestDist = 1000000;
 
 			for(var i = 0; i < objects.length; i++) {
-                        if (objects[i].isAsteroid) {
-				var dist = 0;
-				dist += (objects[0].x - this.x) * (objects[0].x - this.x);
-				dist += (objects[0].y - this.y) * (objects[0].y - this.y);
-				dist = Math.sqrt(dist);
-				if (dist < nearestDist) {
-					nearestDist = dist;
-					nearestRock = objects[0];
+				if (objects[i].isAsteroid) {
+					var dx = objects[i].x - this.x;
+					var dy = objects[i].y - this.y;
+					var dist = Math.sqrt(dx*dx + dy*dy);
+					if (dist < nearestDist) {
+						nearestDist = dist;
+						nearestRock = objects[0];
 					}
 				}
-                	}
+			}
 
 			// Turn towards it
 
@@ -306,12 +305,9 @@
 			var del_x = nearestRock.x - this.x;
 			var del_y = nearestRock.y - this.y;
 
-			var targetAngle = Math.atan2(del_y, del_x);
+			var targetAngle = Math.atan2(del_x, -del_y);
 
-			console.log("***");
-			console.log(turnAngle);
-			console.log(this.angle);
-			console.log(targetAngle);
+			//console.log(turnAngle, this.angle, targetAngle);
 
 			if ((targetAngle - this.angle) > 0) {
 				this.angle = targetAngle; // += Math.min((targetAngle - this.angle), turnAngle);
