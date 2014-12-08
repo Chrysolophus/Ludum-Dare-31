@@ -151,6 +151,8 @@
 		ship.isShip = true;
 		
 		objects.push(ship);
+		
+		return ship;
 	}
 
 	function bulletThink(rate) {
@@ -297,11 +299,14 @@
 		render();
 	}
 	
-	function showMessage(msg) {
+	function showMessage(msg, nextFunc) {
 		text.style.display = "block";
 		text.innerHTML = msg;
+		
+		ready = false;
 		mode = messageIdle;
-		messageAction = function() {
+		
+		messageAction = nextFunc || function() {
 			mode = gameLoop;
 		};
 	}
@@ -328,7 +333,7 @@
 	function level1() {
 		clearWorld();
 		
-		spawnAsteroid(100, 100);
+		spawnAsteroid(500, 400);
 		spawnAsteroid(300, 200);
 		spawnAsteroid(400, 50);
 
@@ -344,7 +349,7 @@
 			
 			// Find the nearest object
 			
-			var nearestRock;
+			var nearestRock = null;
 			var nearestDist = 1000000;
 
 			for(var i = 0; i < objects.length; i++) {
@@ -357,6 +362,15 @@
 						nearestRock = objects[i];
 					}
 				}
+			}
+
+			if(nearestRock == null) {
+				// game lost
+				showMessage(
+"<p>You struggled valiantly, but in the end your efforts were for naught. At this point, resistance is futile. You will be assimilated. Or enslaved. Or probed. Or something or other. But you’re definitely broke given that all of your mineable asteroids are now stardust.\
+<p>Have a good time.\
+<p>GAME OVER", level1);
+				return;
 			}
 
 			// Turn towards it
@@ -389,7 +403,14 @@
 				spawnBullet(this.x, this.y, resource.bullet, this.angle);
 			}
 		};
-		spawnShip(200, 200, resource.ship, shipAI);
+		var ship = spawnShip(200, 200, resource.ship, shipAI);
+		
+		ship.die = function() {
+			showMessage(
+"<p>After turning the S.S. Triangle into a collection of space junk, you went back to your old life of hollowing out asteroids and eating freeze-dried paste. Who knows? Maybe you can even make some extra credits by sneaking the S.S. Triangle’s debris into your next ore shipment! It seems like you can rest easy for now…\
+<p>At least until the next ship comes around, anyways.\
+<p>YOU WIN", level1);
+		};
 		
 		showMessage(
 "<p>You are an intrepid spacer of the Erehwon Asteroid Fields. Life is pretty good between hollowing out asteroids for their rich ore-y innards and the freeze-dried meals.\
