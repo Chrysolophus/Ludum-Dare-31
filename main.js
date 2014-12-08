@@ -144,7 +144,7 @@
 		ship.vx = 0;
 		ship.vy = 0;
 		ship.think = ai;
-		ship.gScale = 0.5;
+		ship.gScale = 0;
 	
 		ship.cooldown = 0;
 	
